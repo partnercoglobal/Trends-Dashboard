@@ -2,6 +2,15 @@
 <html lang="en" class=""><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js) -->
+<script async="" id="ga-src" src="https://www.googletagmanager.com/gtag/js?id=G-8MXVZ79NW1"></script>
+<script id="ga-init">
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8MXVZ79NW1');
+</script>
 <title>Partner.Co | Social Trends</title>
 <meta name="description" content="Multiple formats are peaking this week, and each rewards you for showing up as yourself. Pick one, film it twice and post the better take. Sounds are listed separately at the bottom — grab one and…">
 <meta property="og:type" content="website">
@@ -17,6 +26,19 @@
 <meta name="twitter:title" content="Trending Now — Sept. 15-21, 2026">
 <meta name="twitter:description" content="Multiple formats are peaking this week, and each rewards you for showing up as yourself. Pick one, film it twice and post the better take. Sounds are listed separately at the bottom — grab one and…">
 <meta name="twitter:image" content="https://trends.partnerco.app/preview.jpg?v=w-7txgj8u">
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2571,7 +2593,7 @@ fieldset{border:0;padding:0;margin:0 0 24px}
           '<button class="btn btn-ghost btn-sm" type="button" data-act="og-refresh">Refresh</button>' +
           '<button class="btn btn-ghost btn-sm" type="button" data-act="og-save">Download Image Only</button>' +
         "</span></div>" +
-        '<p class="hint">The card is built for you from the first example on the board, the headline and this week\u2019s note. It comes down as <b>preview.jpg</b> with every export \u2014 upload it next to <b>index.html</b>.</p>' +
+        '<p class="hint">The card is the first cover on the board, edge to edge, with the headline and the week along the bottom. Put your strongest example first \u2014 it is the whole picture people see. It comes down as <b>preview.jpg</b> with every export, so upload it next to <b>index.html</b>.</p>' +
       "</div>" +
       "</fieldset>";
   }
@@ -2723,17 +2745,25 @@ fieldset{border:0;padding:0;margin:0 0 24px}
   function edArchive() {
     var rows = DATA.weeks.map(function (w, i) {
       var live = w.id === DATA.activeWeek;
-      return '<div class="card-ed"><div class="card-ed-head">' +
-        '<span class="card-ed-title" style="cursor:default">' + esc(w.label) +
+      var open = !!openCards[w.id];
+      return '<div class="card-ed' + (open ? " open" : "") + '"><div class="card-ed-head">' +
+        '<button class="card-ed-title" type="button" data-act="toggle" data-t="' + esc(w.id) + '" title="Rename this week" aria-expanded="' + (open ? "true" : "false") + '">' + esc(w.label || "Untitled week") +
           "<small>" + esc(w.range || "") + " · " + w.trends.length + " trends · " + w.sounds.length + " sounds" +
-          (live ? " · showing now" : "") + "</small></span>" +
+          (live ? " · showing now" : "") + "</small></button>" +
         (live ? "" : '<button class="btn btn-ghost btn-sm" type="button" data-act="week-show" data-t="' + esc(w.id) + '">Show</button>') +
         '<button class="mini" type="button" data-act="week-up" data-t="' + esc(w.id) + '"' + (i === 0 ? " disabled" : "") + "><svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 15 6-6 6 6'/></svg></button>" +
         '<button class="mini" type="button" data-act="week-down" data-t="' + esc(w.id) + '"' + (i === DATA.weeks.length - 1 ? " disabled" : "") + "><svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg></button>" +
         '<button class="mini" type="button" data-act="week-del" data-t="' + esc(w.id) + '" title="Delete week"' + (DATA.weeks.length < 2 ? " disabled" : "") + "><svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M6 6 18 18M18 6 6 18'/></svg></button>" +
-      "</div></div>";
+      "</div>" +
+        '<div class="card-ed-body">' +
+          '<div class="row2">' +
+            fld("Week label", "wk." + w.id + ".label", w.label, { placeholder: "Week of Sept. 15", hint: "Shows in the week dropdown and on the shared link." }) +
+            fld("Date range", "wk." + w.id + ".range", w.range, { placeholder: "Sept. 15-21, 2026", hint: "AP style: abbreviate months with six or more letters." }) +
+          "</div>" +
+        "</div>" +
+      "</div>";
     }).join("");
-    return '<div class="callout">Every week you keep here stays reachable from the dropdown at the top of the page, so Brand Partners can look back.</div>' +
+    return '<div class="callout">Every week you keep here stays reachable from the dropdown at the top of the page, so Brand Partners can look back. Click any week to fix its name or dates \u2014 past weeks included.</div>' +
       rows +
       '<div class="add-row" style="margin-top:12px">' +
         '<button class="btn btn-sm" type="button" data-act="week-new">+ Start a Blank Week</button>' +
@@ -2747,7 +2777,7 @@ fieldset{border:0;padding:0;margin:0 0 24px}
       "<h3>The weekly rhythm</h3>" +
       "<ol>" +
         "<li>Open the live page and add <strong>#edit</strong> to the end of the address, or just open your own copy of the file. The gear appears in the bottom-right corner.</li>" +
-        "<li>On <strong>Archive</strong>, choose <strong>Duplicate Current Week</strong>, then rename it on the <strong>Week</strong> tab.</li>" +
+        "<li>On <strong>Archive</strong>, choose <strong>Duplicate Current Week</strong>, then rename it on the <strong>Week</strong> tab. Any week in that list can be renamed later too \u2014 click it open and fix the label or the dates.</li>" +
         "<li>Swap in the new trends, examples and sounds.</li>" +
         "<li>Press <strong>Download Updated File</strong>. Your browser saves a fresh <strong>index.html</strong> — the whole dashboard in one file.</li>" +
         "<li>Upload it over the old one wherever you host it. Done.</li>" +
@@ -2768,7 +2798,7 @@ fieldset{border:0;padding:0;margin:0 0 24px}
       "<p>Covers are worth the extra minute. A post link with no cover is a green tile with a play button, which tells nobody anything. With a cover it looks like the video itself. Uploaded images don’t need one — the image is already its own cover. Covers are compressed automatically, so they add very little to the file.</p>" +
       "<p>Each cover is cropped to fill its frame edge to edge, so nothing is letterboxed. Very tall screenshots lose a little from the top and bottom, so when you crop on your phone, leave the hook text and the face near the middle.</p>" +
       "<h3>The link preview</h3>" +
-      "<p>When the address is pasted into an email, Slack, Teams or LinkedIn, most apps show a card instead of a bare link. The board builds that card for you: the first example on the page over Classic Green, with the headline, the week and your note. Press <strong>Refresh</strong> on the <strong>Week</strong> tab to see it as it stands.</p>" +
+      "<p>When the address is pasted into an email, Slack, Teams or LinkedIn, most apps show a card instead of a bare link. The board builds that card for you: the first cover on the page edge to edge, with the headline and the week along the bottom. The picture is cropped to the card\u2019s wider shape from the middle out, biased a little toward the top so faces stay in frame, and your week note travels with the link as the text beside the card. Press <strong>Refresh</strong> on the <strong>Week</strong> tab to see it as it stands.</p>" +
       "<p>Two files come down with every export now \u2014 <strong>index.html</strong> and <strong>preview.jpg</strong>. Upload both to the same folder. The picture has to sit on the host as its own file, because the apps that build these cards read only the raw page and never run it, so they cannot reach a photo stored inside the file. The first time you export, your browser may ask whether to allow multiple downloads. Say yes.</p>" +
       "<p>Fill in the <strong>Site address</strong> on the Week tab once. Without it the card has nowhere to point and the preview falls back to text.</p>" +
       "<p>Apps cache these cards hard. If a stale picture shows up after an upload, run the address through LinkedIn\u2019s Post Inspector or Facebook\u2019s Sharing Debugger to force a fresh read.</p>" +
@@ -2787,6 +2817,11 @@ fieldset{border:0;padding:0;margin:0 0 24px}
     var p = path.split(".");
     if (p[0] === "meta") { DATA.meta[p[1]] = value; }
     else if (p[0] === "week") { w[p[1]] = value; }
+    /* Any week by id, so the Archive tab can correct a past week's name after the fact. */
+    else if (p[0] === "wk") {
+      var tw = DATA.weeks.filter(function (x) { return x.id === p[1]; })[0];
+      if (tw) tw[p[2]] = value;
+    }
     else if (p[0] === "trend") {
       var t = w.trends.filter(function (x) { return x.id === p[1]; })[0];
       if (t) t[p[2]] = value;
@@ -3044,7 +3079,10 @@ fieldset{border:0;padding:0;margin:0 0 24px}
      out of the file at read time \u2014 it has to exist as a real file next to index.html. It is
      drawn here on a canvas and downloaded with every export. */
   var PREVIEW_FILE = "preview.jpg";
-  var OG_W = 1200, OG_H = 630, OG_PANEL = 455;
+  var OG_W = 1200, OG_H = 630;
+  /* The cover fills the whole card. 0.3 biases the crop upward, which keeps faces in
+     frame on the tall phone screenshots most covers turn out to be. */
+  var OG_FOCUS = 0.3;
 
   function siteBase() {
     var u = (DATA.meta.siteUrl || "").trim();
@@ -3097,27 +3135,6 @@ fieldset{border:0;padding:0;margin:0 0 24px}
     return size;
   }
 
-  function wrapLines(ctx, text, maxW, maxLines) {
-    var words = text.split(" "), lines = [], line = "", cut = false;
-    for (var i = 0; i < words.length; i++) {
-      var test = line ? line + " " + words[i] : words[i];
-      if (line && ctx.measureText(test).width > maxW) {
-        lines.push(line);
-        line = words[i];
-        if (lines.length === maxLines) { cut = true; line = ""; break; }
-      } else line = test;
-    }
-    if (line && lines.length < maxLines) lines.push(line);
-    else if (line) cut = true;
-    /* Trail off rather than stopping mid-sentence. */
-    if (cut && lines.length) {
-      var last = lines[lines.length - 1];
-      while (last && ctx.measureText(last + "\u2026").width > maxW) last = last.slice(0, -1);
-      lines[lines.length - 1] = last.replace(/[\s,;:.\u2014-]+$/, "") + "\u2026";
-    }
-    return lines;
-  }
-
   function buildPreviewCard(cb) {
     var c = document.createElement("canvas");
     c.width = OG_W; c.height = OG_H;
@@ -3130,36 +3147,49 @@ fieldset{border:0;padding:0;margin:0 0 24px}
       ctx.fillRect(0, 0, OG_W, OG_H);
 
       if (cover) {
-        /* Fill the right-hand panel edge to edge, then feather the inner edge so a portrait
-           screenshot sits in the green rather than on top of it. */
-        var sc = Math.max(OG_PANEL / cover.width, OG_H / cover.height);
+        /* Edge to edge. The crop is centred left to right and biased upward, so a tall
+           phone screenshot keeps its subject instead of its floor. */
+        var sc = Math.max(OG_W / cover.width, OG_H / cover.height);
         var dw = cover.width * sc, dh = cover.height * sc;
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(OG_W - OG_PANEL, 0, OG_PANEL, OG_H);
-        ctx.clip();
-        ctx.drawImage(cover, OG_W - OG_PANEL + (OG_PANEL - dw) / 2, (OG_H - dh) / 2, dw, dh);
-        var g = ctx.createLinearGradient(OG_W - OG_PANEL, 0, OG_W - OG_PANEL + 200, 0);
-        g.addColorStop(0, "rgba(41,82,77,1)");
-        g.addColorStop(1, "rgba(41,82,77,0)");
+        ctx.drawImage(cover, (OG_W - dw) / 2, -(dh - OG_H) * OG_FOCUS, dw, dh);
+
+        /* Fade the bottom so the line reads over a bright picture as well as a dark one. */
+        var g = ctx.createLinearGradient(0, OG_H * 0.42, 0, OG_H);
+        g.addColorStop(0, "rgba(34,31,31,0)");
+        g.addColorStop(0.55, "rgba(34,31,31,.55)");
+        g.addColorStop(1, "rgba(34,31,31,.92)");
         ctx.fillStyle = g;
-        ctx.fillRect(OG_W - OG_PANEL, 0, 200, OG_H);
-        ctx.restore();
+        ctx.fillRect(0, OG_H * 0.42, OG_W, OG_H * 0.58);
       }
 
       var x = 76;
-      var maxW = cover ? OG_W - OG_PANEL - 140 : OG_W - 190;
-
       ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = "#DCFD8B";
-      ctx.font = "500 19px " + SANS;
-      spacedText(ctx, (DATA.meta.org || "Partner.Co").toUpperCase() + "   SOCIAL TRENDS", x, 104, 2.4);
+
+      /* No cover on the board means nothing to sit the line on, so the card falls back to
+         the kicker over Classic Green with the line up in the middle. */
+      if (!cover) {
+        ctx.font = "500 19px " + SANS;
+        ctx.fillStyle = "#DCFD8B";
+        spacedText(ctx, (DATA.meta.org || "Partner.Co").toUpperCase() + "   SOCIAL TRENDS", x, 104, 2.4);
+        ctx.font = "500 17px " + SANS;
+        ctx.fillStyle = "rgba(255,255,255,.5)";
+        spacedText(ctx, "WHAT\u2019S WORKING ON SOCIAL THIS WEEK", x, OG_H - 62, 1.8);
+      }
+
+      var w = week();
+      var wk = w ? (w.label || w.range || "") : "";
+      var tail = wk ? "   \u00b7   " + wk : "";
+      var tailSize = 26;
+      ctx.font = "500 " + tailSize + "px " + SANS;
+      var tailW = tail ? ctx.measureText(tail).width : 0;
 
       var title = (DATA.meta.title || "Social Trends").trim();
       var accent = (DATA.meta.titleAccent || "").trim();
-      var size = fitFont(ctx, title, "400", SERIF, 82, 40, maxW);
+      var hy = cover ? OG_H - 74 : 340;
+      var size = fitFont(ctx, title, "400", SERIF, cover ? 62 : 76, 34, OG_W - x * 2 - tailW);
+
       var idx = accent ? title.indexOf(accent) : -1;
-      var hx = x, hy = 214;
+      var hx = x;
       if (idx > -1) {
         var pre = title.slice(0, idx), post = title.slice(idx + accent.length);
         ctx.font = "400 " + size + "px " + SERIF; ctx.fillStyle = "#fff";
@@ -3167,32 +3197,17 @@ fieldset{border:0;padding:0;margin:0 0 24px}
         ctx.font = "italic 400 " + size + "px " + SERIF; ctx.fillStyle = "#DCFD8B";
         ctx.fillText(accent, hx, hy); hx += ctx.measureText(accent).width;
         ctx.font = "400 " + size + "px " + SERIF; ctx.fillStyle = "#fff";
-        ctx.fillText(post, hx, hy);
+        ctx.fillText(post, hx, hy); hx += ctx.measureText(post).width;
       } else {
         ctx.font = "400 " + size + "px " + SERIF; ctx.fillStyle = "#fff";
-        ctx.fillText(title, hx, hy);
+        ctx.fillText(title, hx, hy); hx += ctx.measureText(title).width;
       }
 
-      var w = week();
-      var wk = w ? [w.label, w.range].filter(Boolean).join("   \u00b7   ") : "";
-      if (wk) {
-        ctx.font = "500 27px " + SANS;
-        ctx.fillStyle = "rgba(255,255,255,.9)";
-        ctx.fillText(wk, x, 270);
+      if (tail) {
+        ctx.font = "500 " + tailSize + "px " + SANS;
+        ctx.fillStyle = "rgba(255,255,255,.88)";
+        ctx.fillText(tail, hx, hy);
       }
-
-      ctx.fillStyle = "#fff";
-      ctx.fillRect(x, 310, 54, 4);
-
-      ctx.font = "400 23px " + SANS;
-      ctx.fillStyle = "rgba(255,255,255,.68)";
-      wrapLines(ctx, previewDesc(), maxW, 3).forEach(function (ln, i) {
-        ctx.fillText(ln, x, 364 + i * 34);
-      });
-
-      ctx.font = "500 17px " + SANS;
-      ctx.fillStyle = "rgba(255,255,255,.5)";
-      spacedText(ctx, "WHAT\u2019S WORKING ON SOCIAL THIS WEEK", x, OG_H - 62, 1.8);
 
       cb(c.toDataURL("image/jpeg", 0.86));
     }
@@ -3309,6 +3324,12 @@ fieldset{border:0;padding:0;margin:0 0 24px}
     var doc = new DOMParser().parseFromString(PRISTINE, "text/html");
     var node = doc.getElementById("trendData");
     if (!node) { toast("Export failed — data block missing."); return; }
+    /* Analytics loads itself at run time. The snapshot can catch what it added, so keep the
+       two tags this file ships with and drop anything Google injected on top. */
+    Array.prototype.forEach.call(
+      doc.querySelectorAll('script[src*="googletagmanager.com"],script[src*="google-analytics.com"],iframe[src*="googletagmanager.com"],iframe[src*="google-analytics.com"]'),
+      function (n) { if (n.id !== "ga-src") n.parentNode.removeChild(n); }
+    );
     node.textContent = "\n" + json + "\n";
     writeShareTags(doc);
     /* The snapshot was taken with the editor on, so drop the mode class from the copy
